@@ -23,3 +23,10 @@ spec:
     spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
+      containers:
+      - name: sales-api
+        resources:
+          requests:
+            cpu: "500m" # I need access to 1/2 core on the node.
+          limits:
+            cpu: "500m" # Execute instructions 50ms/100ms on my 1 core.

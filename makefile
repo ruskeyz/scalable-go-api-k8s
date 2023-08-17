@@ -3,35 +3,10 @@ SHELL_PATH = /bin/ash
 SHELL = $(if $(wildcard $(SHELL_PATH)),/bin/ash,/bin/bash)
 
 # Deploy First Mentality
-
 # ==============================================================================
-# Brew Installation
-#
-#	Have brew installed, which simplifies the process of installing all the tooling.
-#
-# ==============================================================================
-# Windows Users ONLY - Install Telepresence
-#
-#	Unfortunately you can't use brew to install telepresence because you will
-#	receive a bad binary. Please follow these instruction.
-#
-#	$ sudo curl -fL https://app.getambassador.io/download/tel2/linux/amd64/latest/telepresence -o /usr/local/bin/telepresence
-#	$ sudo chmod a+x /usr/local/bin/telepresence
-#
-# 	Restart your wsl environment.
-
-# ==============================================================================
-# Linux Users ONLY - Install Telepresence
-#
-#   https://www.telepresence.io/docs/latest/quick-start/?os=gnu-linux
-
-# ==============================================================================
-# M1 Mac Users ONLY - Uninstall Telepresence If Installed Intel Version
-#
 #   $ sudo rm -rf /Library/Developer/CommandLineTools
 #   $ sudo xcode-select --install
 #   Then it installed with brew (arm64)
-
 # ==============================================================================
 # Install Tooling and Dependencies
 #
@@ -44,13 +19,13 @@ SHELL = $(if $(wildcard $(SHELL_PATH)),/bin/ash,/bin/bash)
 #	$ make dev-brew-common
 #	$ make dev-docker
 #	$ make dev-gotooling
-#   Follow instructions above for Telepresence.
+#   Follow instructions to install Telepresence online
 #
 #	If you are a windows user with brew, run these commands:
 #	$ make dev-brew-common
 #	$ make dev-docker
 #	$ make dev-gotooling
-#   Follow instructions above for Telepresence.
+#   Follow instructions to install Telepresence online
 
 # ==============================================================================
 # ==============================================================================
@@ -61,13 +36,10 @@ SHELL = $(if $(wildcard $(SHELL_PATH)),/bin/ash,/bin/bash)
 #	$ make dev-update-apply
 #
 #	Note: If you attempted to run with telepresence and it didn't work, you may
-#		  want to restart the cluser.
-#		  $ make dev-down-local
-#
+#		  want to restart the cluster.
 # ==============================================================================
 # ==============================================================================
 # Define dependencies
-
 GOLANG          := golang:1.21
 ALPINE          := alpine:3.18
 KIND            := kindest/node:v1.27.3
@@ -81,12 +53,8 @@ SERVICE_NAME    := sales-api
 VERSION         := 0.0.1
 SERVICE_IMAGE   := $(BASE_IMAGE_NAME)/$(SERVICE_NAME):$(VERSION)
 METRICS_IMAGE   := $(BASE_IMAGE_NAME)/$(SERVICE_NAME)-metrics:$(VERSION)
-
-# VERSION       := "0.0.1-$(shell git rev-parse --short HEAD)" this can be used to tie versioning to git
-
 # ==============================================================================
 # Running from within k8s/kind
-
 # Install dependencies
 
 dev-gotooling:
@@ -117,7 +85,6 @@ dev-docker:
 	docker pull $(KIND)
 	docker pull $(TELEPRESENCE)
 
-# ==============================================================================
 # Building containers
 all: service
 
@@ -156,3 +123,6 @@ dev-status:
 	kubectl get nodes -o wide
 	kubectl get svc -o wide
 	kubectl get pods -o wide --watch --all-namespaces
+
+dev-describe-sales:
+	kubectl describe pod --namespace=$(NAMESPACE) -l app=$(APP)
