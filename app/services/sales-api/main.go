@@ -10,6 +10,8 @@ import (
 	"github.com/ruskeyz/scalable-go-api-k8s/foundation/logger"
 )
 
+var build = "develop"
+
 func main() {
 	log := logger.New(os.Stdout, logger.LevelInfo, "SALES-API")
 
@@ -26,7 +28,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 	// -------------------------------------------------------------------------
 	// GOMAXPROCS
 
-	log.Info(ctx, "startup", "GOMAXPROCS", runtime.GOMAXPROCS(0))
+	log.Info(ctx, "startup", "GOMAXPROCS", runtime.GOMAXPROCS(0), "build", build)
 
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)

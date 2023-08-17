@@ -119,6 +119,15 @@ dev-docker:
 
 # ==============================================================================
 # Building containers
+all: service
+
+service:
+	docker build \
+		-f zarf/docker/dockerfile.service \
+		-t $(SERVICE_IMAGE) \
+		--build-arg BUILD_REF=$(VERSION) \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+		.
 
 dev-up:
 	kind create cluster \
@@ -130,5 +139,11 @@ dev-up:
 
 dev-down:
 	kind delete cluster --name $(KIND_CLUSTER)
-run:
-	go run app/services/sales-api/main.go
+
+dev-logs:
+	kubectl logs --namespace=$(NAMESPACE) -l app=$(APP) --all-containers=true -f --tail=100 --max-log-requests=6
+
+dev-status:
+	kubectl get nodes -o wide
+	kubectl get svc -o wide
+	kubectl get pods -o wide --watch --all-namespaces
